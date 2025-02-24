@@ -101,16 +101,29 @@
       console.log("Cola actualizada:", queue);
       const queueList = document.getElementById("queueList");
       queueList.innerHTML = "";
+
       queue.forEach((video, index) => {
         const li = document.createElement("li");
         li.style.cursor = "pointer";
+
         const thumbnail = document.createElement("img");
         thumbnail.src = `https://img.youtube.com/vi/${video.id}/default.jpg`;
         thumbnail.alt = video.title;
         thumbnail.style.width = "80px";
         thumbnail.style.marginRight = "10px";
+
         const titleSpan = document.createElement("span");
         titleSpan.textContent = video.title;
+
+        // Botón para abrir en YouTube
+        const openButton = document.createElement("button");
+        openButton.textContent = "Abrir en YouTube";
+        openButton.style.marginLeft = "10px";
+        openButton.onclick = (event) => {
+          event.stopPropagation();
+          window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank');
+        };
+
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Eliminar";
         deleteButton.style.marginLeft = "10px";
@@ -118,9 +131,11 @@
           event.stopPropagation();
           removeFromQueue(index);
         };
+
         li.onclick = () => playSelectedVideo(index);
         li.appendChild(thumbnail);
         li.appendChild(titleSpan);
+        li.appendChild(openButton);
         li.appendChild(deleteButton);
         queueList.appendChild(li);
       });
