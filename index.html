@@ -27,15 +27,12 @@
     const isAndroid = /android/i.test(navigator.userAgent);
     let url;
 
-    const videoIds = "MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME";
-
     if (isAndroid) {
-      console.log('Android detected');
+      const encodedUrl = encodeURI(`https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`);
+      url = `intent://#Intent;data=${encodedUrl};package=com.google.android.youtube;end;`;
     } else {
-      console.log('Not Android');
+      url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
     }
-
-    window.location.href = url;
 
     const openButton1 = document.createElement("button");
     openButton1.textContent = "Abrir Playlist en YouTube App";
@@ -44,12 +41,7 @@
 
     openButton1.onclick = (event) => {
       event.stopPropagation();
-      if (isAndroid) {
-        // Usar window.location.href en lugar de window.open()
-        window.open(url, '_blank');
-      } else {
-        window.open(url, '_blank');
-      }
+      window.open(url, '_blank');
     };
 
 
