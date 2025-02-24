@@ -121,16 +121,17 @@
         openButton.style.marginLeft = "10px";
         openButton.onclick = (event) => {
           event.stopPropagation();
-          window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank');
-        };
+          const videoId = video.id; // Asegúrate de que `video.id` esté definido
+          const appUrl = `youtube://watch?v=${videoId}`;
+          const webUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-        // Botón para abrir en YouTube TV
-        const openTvButton = document.createElement("button");
-        openTvButton.textContent = "Abrir en YouTube TV";
-        openTvButton.style.marginLeft = "10px";
-        openTvButton.onclick = (event) => {
-          event.stopPropagation();
-          window.open(`https://www.youtube.com/tv#/watch?v=${video.id}`, '_blank');
+          // Intenta abrir la app de YouTube
+          window.location.href = appUrl;
+
+          // Si la app no está instalada, redirige al navegador después de un breve retraso
+          setTimeout(() => {
+            window.location.href = webUrl;
+          }, 500); // Espera 500 ms antes de redirigir al navegador
         };
 
         const deleteButton = document.createElement("button");
