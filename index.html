@@ -139,25 +139,23 @@
     }
 
     async function searchVideo(query) {
-      const apiKey = process.env.YOUTUBE_API_KEY
-      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${apiKey}`;
+      const url = `/api/search?q=${encodeURIComponent(query)}`; // Ahora llamamos a la función serverless
+
       try {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
         const data = await response.json();
-        if (!data.items || data.items.length === 0) {
-          return null;
-        }
+        if (!data.items || data.items.length === 0) return null;
+
         const video = data.items[0];
-        return {
-          id: video.id.videoId,
-          title: video.snippet.title
-        };
+        return { id: video.id.videoId, title: video.snippet.title };
       } catch (error) {
         console.error('Error al buscar el video:', error.message);
         return null;
       }
     }
+
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
