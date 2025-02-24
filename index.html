@@ -181,6 +181,15 @@
       }
     }
 
+    // Botón para abrir en YouTube
+    const openButton1 = document.createElement("button");
+    openButton1.textContent = "Abrir Playlist en YouTube";
+    document.body.appendChild(openButton1);
+    openButton1.style.marginLeft = "10px";
+    openButton1.onclick = (event) => {
+      event.stopPropagation();
+      window.open(`https://www.youtube.com/watch_videos?video_ids=QCZZwZQ4qNs,Soa3gO7tL-c,Bnc7Bz57CME`, '_blank');
+    };
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
