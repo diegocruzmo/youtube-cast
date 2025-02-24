@@ -124,6 +124,15 @@
           window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank');
         };
 
+        // Botón para abrir en YouTube TV
+        const openTvButton = document.createElement("button");
+        openTvButton.textContent = "Abrir en YouTube TV";
+        openTvButton.style.marginLeft = "10px";
+        openTvButton.onclick = (event) => {
+          event.stopPropagation();
+          window.open(`https://www.youtube.com/tv#/watch?v=${video.id}`, '_blank');
+        };
+
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Eliminar";
         deleteButton.style.marginLeft = "10px";
@@ -136,6 +145,7 @@
         li.appendChild(thumbnail);
         li.appendChild(titleSpan);
         li.appendChild(openButton);
+        li.appendChild(openTvButton);
         li.appendChild(deleteButton);
         queueList.appendChild(li);
       });
