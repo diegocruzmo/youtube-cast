@@ -8,6 +8,7 @@
 </head>
 
 <body>
+
   <h2>Reproductor de YouTube con Cast</h2>
   <div id="player"></div>
   <input type="text" id="searchInput" placeholder="Buscar video">
@@ -21,6 +22,28 @@
     let player;
     let intervalId;
     let wasPlaying = false; //Si un video estaba reproduciendo antes
+
+
+    const isAndroid = /android/i.test(navigator.userAgent);
+    let url;
+
+    if (isAndroid) {
+      const encodedUrl = encodeURI(`https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`);
+      url = `intent://#Intent;data=${encodedUrl};package=com.google.android.youtube;end;`;
+    } else {
+      url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
+    }
+
+    const openButton1 = document.createElement("button");
+    openButton1.textContent = "Abrir Playlist en YouTube App";
+    openButton1.style.marginLeft = "10px";
+    document.body.appendChild(openButton1);
+
+    openButton1.onclick = (event) => {
+      event.stopPropagation();
+      window.open(url, '_blank');
+    };
+
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
@@ -171,26 +194,6 @@
         return null;
       }
     }
-
-    const isAndroid = /android/i.test(navigator.userAgent);
-    let url;
-
-    if (isAndroid) {
-      const encodedUrl = encodeURI(`https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`);
-      url = `intent://#Intent;data=${encodedUrl};package=com.google.android.youtube;end;`;
-    } else {
-      url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
-    }
-
-    const openButton1 = document.createElement("button");
-    openButton1.textContent = "Abrir Playlist en YouTube App";
-    openButton1.style.marginLeft = "10px";
-    document.body.appendChild(openButton1);
-
-    openButton1.onclick = (event) => {
-      event.stopPropagation();
-      window.open(url, '_blank');
-    };
 
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
