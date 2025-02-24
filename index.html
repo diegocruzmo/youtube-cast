@@ -27,20 +27,19 @@
     const isAndroid = /android/i.test(navigator.userAgent);
     let url;
 
-    if (isAndroid) {
-      // URL de YouTube codificada para el intent
-      const videoIds = "MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME";
-      const encodedUrl = encodeURIComponent(`https://www.youtube.com/watch_videos?video_ids=${videoIds}`);
+    const videoIds = "MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME";
 
-      // Intent con formato correcto (incluye action y fallback)
-      url = `intent://${videoIds}/#Intent` +
+    if (isAndroid) {
+      url = `intent://watch_videos?video_ids=${videoIds}#Intent` +
         `;action=android.intent.action.VIEW` +
         `;package=com.google.android.youtube` +
-        `;S.browser_fallback_url=${encodedUrl}` +
+        `;S.browser_fallback_url=https://www.youtube.com/watch_videos?video_ids=${videoIds}` +
         `;end`;
     } else {
-      url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
+      url = `https://www.youtube.com/watch_videos?video_ids=${videoIds}`;
     }
+
+    window.location.href = url;
 
     const openButton1 = document.createElement("button");
     openButton1.textContent = "Abrir Playlist en YouTube App";
