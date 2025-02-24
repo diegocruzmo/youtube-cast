@@ -121,17 +121,7 @@
         openButton.style.marginLeft = "10px";
         openButton.onclick = (event) => {
           event.stopPropagation();
-          const videoId = video.id; // Asegúrate de que `video.id` esté definido
-          const appUrl = `youtube://watch?v=${videoId}`;
-          const webUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-          // Intenta abrir la app de YouTube
-          window.location.href = appUrl;
-
-          // Si la app no está instalada, redirige al navegador después de un breve retraso
-          setTimeout(() => {
-            window.location.href = webUrl;
-          }, 500); // Espera 500 ms antes de redirigir al navegador
+          window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank');
         };
 
         const deleteButton = document.createElement("button");
@@ -182,14 +172,22 @@
       }
     }
 
-    // Botón para abrir en YouTube
+    const isAndroid = /android/i.test(navigator.userAgent);
+    let url;
+
+    if (isAndroid) {
+      const encodedUrl = encodeURI(`https://www.youtube.com/watch?v=${video.id}`);
+      url = `intent://#Intent;data=${encodedUrl};package=com.google.android.youtube;end;`;
+    } else {
+      url = `https://www.youtube.com/watch?v=${video.id}`;
+    }
+
     const openButton1 = document.createElement("button");
-    openButton1.textContent = "Abrir Playlist en YouTube";
-    document.body.appendChild(openButton1);
+    openButton1.textContent = "Abrir Playlist en YouTube Ap";
     openButton1.style.marginLeft = "10px";
     openButton1.onclick = (event) => {
       event.stopPropagation();
-      window.open(`https://www.youtube.com/watch_videos?video_ids=QCZZwZQ4qNs,Soa3gO7tL-c,Bnc7Bz57CME`, '_blank');
+      window.open(url, '_blank');
     };
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
