@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cola de Reproducción con Cast</title>
+</head>
+
+<body>
+  <h2>Reproductor de YouTube con Cast</h2>
+  <div id="player"></div>
+  <input type="text" id="searchInput" placeholder="Buscar video">
+  <button onclick="searchAndAdd()">Buscar y Añadir</button>
+  <button onclick="skipToNext()">Siguiente</button>
+  <h3>Cola de Reproducción</h3>
+  <ul id="queueList"></ul>
+
+  <script>
+    let queue = [];
+    let player;
+    let intervalId;
+    let wasPlaying = false; //Si un video estaba reproduciendo antes
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '360',
+        width: '640',
+        videoId: '3AxBl2XDXuw',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      const duration = player.getDuration();
+      console.log("Duración del video:", duration);
+    }
+
+    function onPlayerStateChange(event) {
+      console.log("Player state changed:", event.data);
+
+      if (event.data === YT.PlayerState.ENDED) {
+        console.log("Video ended (ENDED). Playing next video...");
+        playNextVideo();
+        wasPlaying = false; // Reset after video ends
+      }
+      else if (event.data === YT.PlayerState.PLAYING) {
+        console.log("Video is playing");
+        wasPlaying = true; // Mark that a video is playing
+      }
+      else if (event.data === YT.PlayerState.UNSTARTED && wasPlaying) {
+        console.log("Video likely ended (UNSTARTED after PLAYING). Playing next video...");
+        playNextVideo();
+        wasPlaying = false; // Reset after advancing
+      }
+      else {
+        console.log("Current state:", event.data);
+      }
+    }
+
+    function playNextVideo() {
+      if (queue.length > 0) {
+        const nextVideo = queue.shift();
+        console.log("Playing next video:", nextVideo.title);
+        player.loadVideoById(nextVideo.id);
+        setTimeout(() => player.playVideo(), 2000); // Increased delay for TV
+        updateQueueDisplay();
+      } else {
+        console.log("No more videos in the queue.");
+      }
+    }
+    function skipToNext() {
+      playNextVideo();
+    }
+
+    async function searchAndAdd() {
+      const query = document.getElementById('searchInput').value;
+      const videoData = await searchVideo(query);
+      if (videoData) {
+        addToQueueAndPlay(videoData);
+      }
+    }
+
+    function addToQueueAndPlay(videoData) {
+      queue.push(videoData);
+      updateQueueDisplay();
+
+      const state = player.getPlayerState();
+      console.log("Estado actual del reproductor:", state);
+
+      // Si el reproductor está en pausa, detenido o terminó, reproducir el siguiente video.
+      if (state === YT.PlayerState.ENDED || state === YT.PlayerState.PAUSED || state === -1) {
+        playNextVideo();
+      }
+    }
+
+    function updateQueueDisplay() {
+      console.log("Cola actualizada:", queue);
+      const queueList = document.getElementById("queueList");
+      queueList.innerHTML = "";
+      queue.forEach((video, index) => {
+        const li = document.createElement("li");
+        li.style.cursor = "pointer";
+        const thumbnail = document.createElement("img");
+        thumbnail.src = `https://img.youtube.com/vi/${video.id}/default.jpg`;
+        thumbnail.alt = video.title;
+        thumbnail.style.width = "80px";
+        thumbnail.style.marginRight = "10px";
+        const titleSpan = document.createElement("span");
+        titleSpan.textContent = video.title;
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Eliminar";
+        deleteButton.style.marginLeft = "10px";
+        deleteButton.onclick = (event) => {
+          event.stopPropagation();
+          removeFromQueue(index);
+        };
+        li.onclick = () => playSelectedVideo(index);
+        li.appendChild(thumbnail);
+        li.appendChild(titleSpan);
+        li.appendChild(deleteButton);
+        queueList.appendChild(li);
+      });
+    }
+
+    function playSelectedVideo(index) {
+      const selectedVideo = queue.splice(index, 1)[0];
+      player.cueVideoById(selectedVideo.id);
+      setTimeout(() => player.playVideo(), 1000);
+      updateQueueDisplay();
+    }
+
+    function removeFromQueue(index) {
+      queue.splice(index, 1);
+      updateQueueDisplay();
+    }
+
+    async function searchVideo(query) {
+      const apiKey = 'AIzaSyDdP-UgpzwphRzqxzrOZyHDgg6anjQV7-4'; // Clave de API
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${apiKey}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        const data = await response.json();
+        if (!data.items || data.items.length === 0) {
+          return null;
+        }
+        const video = data.items[0];
+        return {
+          id: video.id.videoId,
+          title: video.snippet.title
+        };
+      } catch (error) {
+        console.error('Error al buscar el video:', error.message);
+        return null;
+      }
+    }
+  </script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+
+</html>
