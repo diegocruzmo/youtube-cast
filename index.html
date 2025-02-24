@@ -172,6 +172,7 @@
       }
     }
 
+
     const isAndroid = /android/i.test(navigator.userAgent);
     let url;
 
@@ -185,10 +186,13 @@
     const openButton1 = document.createElement("button");
     openButton1.textContent = "Abrir Playlist en YouTube Ap";
     openButton1.style.marginLeft = "10px";
+    document.body.appendChild(openButton1);
+
     openButton1.onclick = (event) => {
       event.stopPropagation();
       window.open(url, '_blank');
     };
+
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
