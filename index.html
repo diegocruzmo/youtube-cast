@@ -30,13 +30,9 @@
     const videoIds = "MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME";
 
     if (isAndroid) {
-      url = `intent://watch_videos?video_ids=${videoIds}#Intent` +
-        `;action=android.intent.action.VIEW` +
-        `;package=com.google.android.youtube` +
-        `;S.browser_fallback_url=https://www.youtube.com/watch_videos?video_ids=${videoIds}` +
-        `;end`;
+      console.log('Android detected');
     } else {
-      url = `https://www.youtube.com/watch_videos?video_ids=${videoIds}`;
+      console.log('Not Android');
     }
 
     window.location.href = url;
@@ -50,7 +46,7 @@
       event.stopPropagation();
       if (isAndroid) {
         // Usar window.location.href en lugar de window.open()
-        window.location.href = url;
+        window.open(url, '_blank');
       } else {
         window.open(url, '_blank');
       }
