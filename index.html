@@ -139,7 +139,7 @@
     }
 
     async function searchVideo(query) {
-      const apiKey = 'AIzaSyDdP-UgpzwphRzqxzrOZyHDgg6anjQV7-4'; // Clave de API
+      const apiKey = process.env.YOUTUBE_API_KEY
       const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${apiKey}`;
       try {
         const response = await fetch(url);
