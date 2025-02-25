@@ -32,7 +32,8 @@
     if (isAndroid) {
       const videoIds = "MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME";
       const youtubeUrl = `https://www.youtube.com/watch_videos?video_ids=${videoIds}`;
-      url = `intent:${youtubeUrl}#Intent;package=com.google.android.youtube;scheme=https;end;`;
+
+      url = `intent://watch_videos?video_ids=${videoIds}#Intent;scheme=https;package=com.google.android.youtube;end;`;
     } else {
       url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
     }
@@ -46,6 +47,7 @@
       event.stopPropagation();
       window.location.href = url; // Redirigir directamente
     };
+
 
 
     function onYouTubeIframeAPIReady() {
