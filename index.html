@@ -27,9 +27,11 @@
     const isAndroid = /android/i.test(navigator.userAgent);
     let url;
 
+    console.log(isAndroid);
+
     if (isAndroid) {
-      const encodedUrl = encodeURI(`https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`);
-      url = `intent://#Intent;data=${encodedUrl};package=com.google.android.youtube;end;`;
+      const encodedUrl = encodeURIComponent("https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME");
+      url = `intent://${encodedUrl}#Intent;package=com.google.android.youtube;scheme=https;end;`;
     } else {
       url = `https://www.youtube.com/watch_videos?video_ids=MgsdDfdGdHc,fIPOjkmMpKk,Bnc7Bz57CME`;
     }
@@ -41,8 +43,9 @@
 
     openButton1.onclick = (event) => {
       event.stopPropagation();
-      window.open(url, '_blank');
+      window.location.href = url;
     };
+
 
 
     function onYouTubeIframeAPIReady() {
